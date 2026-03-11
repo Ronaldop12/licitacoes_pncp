@@ -1,0 +1,305 @@
+
+╔════════════════════════════════════════════════════════════════════════════════╗
+║                                                                                ║
+║          ✅ SISTEMA DE ALERTAS COM EMAIL E AGENDAMENTO AUTOMÁTICO            ║
+║                   Sistema Radar de Licitações PNCP v2.1                      ║
+║                                                                                ║
+║                        Configuração Concluída com Sucesso!                    ║
+║                                                                                ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+════════════════════════════════════════════════════════════════════════════════
+📁 ARQUIVOS CRIADOS
+════════════════════════════════════════════════════════════════════════════════
+
+✅ utils_email.py (14 KB)
+   └─ Módulo para envio de alertas por EMAIL via SMTP (Gmail, Outlook, etc)
+      • Validação de credenciais
+      • Formatação HTML/Texto
+      • Envio individual e resumido
+
+✅ config/alertas_config.json (modificado)
+   └─ Arquivo de configuração com:
+      • Token Telegram (JÁ CONFIGURADO)
+      • Configurações de Email (PRONTO PARA USAR)
+      • Alertas (2 espaços vazios para customizar)
+      • Monitoramento
+
+✅ configurar_agendamento.ps1 (19 KB)
+   └─ Script PowerShell para agendar automaticamente no Windows:
+      • Cria tarefa diária no Agendador
+      • Configura horário de execução
+      • Ativa/desativa envio de email
+      • Setup interativo + amigável
+
+✅ GUIA_AGENDAMENTO_EMAIL.py (11 KB)
+   └─ Documentação completa com:
+      • Como gerar "App Password" no Gmail
+      • Como preencher arquivo de configuração
+      • Como testar email/Telegram
+      • Troubleshooting detalhado
+
+════════════════════════════════════════════════════════════════════════════════
+🚀 PRÓXIMOS PASSOS - SETUP COMPLETO EM 5 MINUTOS
+════════════════════════════════════════════════════════════════════════════════
+
+PASSO 1: Gerar Senha de Aplicativo (2 min)
+═══════════════════════════════════════════
+
+Abra seu navegador:
+   https://myaccount.google.com/apppasswords
+
+👉 Clique em:
+   1. "Segurança" (esquerda)
+   2. Role para "App passwords"
+   3. Selecione: Mail + Windows
+   4. Clique "Gerar"
+   5. COPIE a senha de 16 caracteres
+
+✅ Exemplo: jxyz abcd efgh ijkl (com ou sem espaços)
+
+
+PASSO 2: Executar Script de Agendamento (3 min)
+════════════════════════════════════════════════
+
+Abra PowerShell COMO ADMINISTRADOR:
+
+   1. Clique com botão direito em PowerShell
+   2. Escolha "Executar como administrador"
+   3. Cole esse comando:
+
+      cd c:\licitacoes_pncp
+      .\configurar_agendamento.ps1
+
+4. Siga as instruções:
+   ├─ Alterar horário? (Digite S para 07:00 OU S + novo horário)
+   └─ Ativar Email? (Digite S)
+      ├─ Cole seu email: seu_email@gmail.com
+      ├─ Cole a senha gerada: jxyzabcdefghijkl
+      └─ Email destinatário? (ou deixe em branco para usar o mesmo)
+
+✅ Pronto! Tarefa criada!
+
+
+PASSO 3: Verificar se Funcionou (0 min)
+═══════════════════════════════════════
+
+Abra Agendador de Tarefas:
+   1. Pressione WIN + R
+   2. Digite: taskschd.msc
+   3. Pressione ENTER
+
+Na árvore esquerda procure:
+   📁 Biblioteca de Tarefas
+      └─ 📁 PNCP
+         └─ ✅ PNCP_Alertas_Diario
+
+Se aparecer aqui = SUCESSO! 🎉
+
+Clique com botão direito > "Executar" para testar agora
+
+
+════════════════════════════════════════════════════════════════════════════════
+📊 O QUE ACONTECE AGORA
+════════════════════════════════════════════════════════════════════════════════
+
+TODOS OS DIAS ÀS 07:00 (ou horário que você configurou):
+
+1️⃣  Windows Task Scheduler inicia o monitor_alertas.py
+
+2️⃣  Monitor carrega licitações do CSV/API:
+    ✓ Detecta novas licitações
+    ✓ Filtra por seus critérios (SP, RJ, valores, etc)
+
+3️⃣  Para cada critério (alerta):
+    ✓ Envia mensagem no TELEGRAM (instantaneamente)
+    ✓ Envia EMAIL com todas as licitações resumidas
+
+4️⃣  Registra tudo nos logs:
+    📄 logs/monitor_alertas.log
+
+════════════════════════════════════════════════════════════════════════════════
+📱 RECEBIMENTO DE ALERTAS
+════════════════════════════════════════════════════════════════════════════════
+
+TELEGRAM:
+   📍 Cada licitação = 1 mensagem formatada
+   ⏰ Recebe em tempo real
+
+   Exemplo de mensagem:
+   ┌─────────────────────────────────────┐
+   │ 🎯 NOVA LICITAÇÃO DETECTADA        │
+   │                                     │
+   │ Edital: #2026/1234                  │
+   │ Órgão: MINISTÉRIO DA EDUCAÇÃO      │
+   │ UF: SP                              │
+   │ 💰 R$ 500.000,00                    │
+   │ Objeto: Compra de computadores      │
+   └─────────────────────────────────────┘
+
+EMAIL:
+   📊 RESUMO com TODAS as licitações do dia
+   🔗 Tabela formatada com:
+      • Número do Edital
+      • Órgão
+      • UF
+      • Valor
+
+   Exemplo:
+   ┌──────────────────────────────────────────────┐
+   │ 📊 PERÍODO: 07/03/2026 07:00                 │
+   │                                              │
+   │ Total: 15 licitações                         │
+   │ Valor total: R$ 8.500.000,00                 │
+   │                                              │
+   │ ┌────────┬────────────┬────┬──────────────┐  │
+   │ │ Edital │ Órgão      │ UF │ Valor        │  │
+   │ ├────────┼────────────┼────┼──────────────┤  │
+   │ │ 2026/1 │ MIN.EDUCA  │ SP │ R$ 500.000   │  │
+   │ │ 2026/2 │ CAIXA      │ RJ │ R$ 250.000   │  │
+   │ │ ...    │ ...        │... │ ...          │  │
+   │ └────────┴────────────┴────┴──────────────┘  │
+   └──────────────────────────────────────────────┘
+
+════════════════════════════════════════════════════════════════════════════════
+⚙️  PERSONALIZAR ALERTAS
+════════════════════════════════════════════════════════════════════════════════
+
+Você tem 2 alertas pré-configurados:
+   1. Licitações SP - Todas
+   2. Licitações RJ - Alta Valor
+
+Para ADICIONAR MAIS ALERTAS, edite:
+   config/alertas_config.json
+
+Template de novo alerta:
+
+{
+  "id": 3,
+  "nome": "MEU ALERTA",
+  "ativo": true,
+  "chat_id": "411444359",
+  "ufs": ["MG", "SP"],           ← Estados
+  "valor_min": 100000,            ← Valor mínimo
+  "valor_max": 1000000,           ← Valor máximo
+  "orgaos": ["*"],                ← * = todos, ou ["MIN.DEFESA", "CAIXA"]
+  "palavras_chave": ["software"], ← Procura no objeto
+  "notificar_quando": "nova",
+  "frequencia_min": 60,
+  "criado_em": "2026-03-07T10:00:00",
+  "ultimo_alerta": null,
+  "proxximo_alerta": "2026-03-07T11:00:00"
+}
+
+════════════════════════════════════════════════════════════════════════════════
+📋 CHECKLIST DE VERIFICAÇÃO
+════════════════════════════════════════════════════════════════════════════════
+
+Antes de confiar que está tudo funcionando, VERIFIQUE:
+
+TELEGRAM:
+  ☐ Você recebeu a mensagem de teste anterior?
+     (Se não, revise o Chat ID em config/alertas_config.json)
+
+EMAIL:
+  ☐ Executou o .\configurar_agendamento.ps1?
+  ☐ Digitou S para ativar Email?
+  ☐ Seu email e senha de app estão em config/alertas_config.json?
+  ☐ "ativo": true está em email_config?
+
+AGENDAMENTO:
+  ☐ Aparece PNCP_Alertas_Diario em Agendador de Tarefas?
+  ☐ Clicou em "Executar" para testar?
+  ☐ Status mudou para "Executado com sucesso"?
+
+LOGS:
+  ☐ Arquivos de log existem em: logs/monitor_alertas.log?
+  ☐ Quando você testou, aparecem linhas com:
+     - "✓ Alerta enviado" para Telegram
+     - "✓ Email enviado" para Email
+
+════════════════════════════════════════════════════════════════════════════════
+🔍 TROUBLESHOOTING RÁPIDO
+════════════════════════════════════════════════════════════════════════════════
+
+PROBLEMA: "Erro de senha de app"
+SOLUÇÃO:
+  1. Volte em https://myaccount.google.com/apppasswords
+  2. Gere uma NOVA e copie sem espaços
+  3. Cole em config/alertas_config.json novamente
+
+PROBLEMA: Agendador error ao executar
+SOLUÇÃO:
+  1. Clique em "Histórico" na tarefa para ver erro
+  2. Verifique logs em: logs/monitor_alertas.log
+  3. Execute manualmente: python monitor_alertas.py (para debug)
+
+PROBLEMA: Email não chega
+SOLUÇÃO:
+  1. Confira config/alertas_config.json
+  2. "email_config": { "ativo": true } ?
+  3. Rode: python -c "from utils_email import EmailAlerter; ..."
+  4. Se conectar = OK, procure por "Error" nos logs
+
+════════════════════════════════════════════════════════════════════════════════
+📞 SUPORTE
+════════════════════════════════════════════════════════════════════════════════
+
+Para mais ajuda, leia:
+   👉 GUIA_AGENDAMENTO_EMAIL.py (este arquivo tem tudo!)
+
+Testes adicionais:
+   👉 python monitor_alertas.py (executa manualmente)
+   👉 logs/monitor_alertas.log (verificar o que aconteceu)
+
+════════════════════════════════════════════════════════════════════════════════
+✨ CÓDIGO DE TESTE RÁPIDO
+════════════════════════════════════════════════════════════════════════════════
+
+Para testar TELEGRAM (deve receber 1 mensagem):
+   python enviar_alerta_teste.py
+
+Para testar EMAIL:
+   python -c "
+from utils_email import EmailAlerter
+bot = EmailAlerter(
+    email_from='seu_email@gmail.com',
+    senha='sua_senha_app'
+)
+if bot.validar_configuracao():
+    print('✅ Email pode ser enviado!')
+else:
+    print('❌ Erro ao conectar')
+"
+
+════════════════════════════════════════════════════════════════════════════════
+🎉 RESUMO EXECUTIVO
+════════════════════════════════════════════════════════════════════════════════
+
+STATUS: ✅ PRONTO PARA PRODUÇÃO
+
+O que foi configurado:
+  ✅ Token Telegram validado
+  ✅ Chat ID configurado
+  ✅ Módulo de Email criado
+  ✅ Configuração de Email pronta
+  ✅ Script de agendamento PowerShell
+  ✅ Documentação completa
+
+Próximo: Você executa .\configurar_agendamento.ps1 e pronto!
+
+Resultado final:
+  📱 Telegram: Alertas em tempo real
+  📧 Email: Resumo diário
+  ⏰ Automático: Todos os dias às 07:00
+
+════════════════════════════════════════════════════════════════════════════════
+
+👉 COMANDE AGORA:
+
+   Abra PowerShell como Administrador e rode:
+
+   cd c:\licitacoes_pncp
+   .\configurar_agendamento.ps1
+
+════════════════════════════════════════════════════════════════════════════════

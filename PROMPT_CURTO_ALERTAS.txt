@@ -1,0 +1,109 @@
+# 🤖 PROMPT CURTO - Para Copiar e Colar no Próximo Chat
+
+Sou especialista em Python/Streamlit. Preciso implementar **Alertas via Telegram** no projeto "Radar de Licitações de TI".
+
+## 📍 Contexto
+- **Projeto**: Dashboard Streamlit (Python 3.10, c:\licitacoes_pncp)
+- **Status**: ✅ Funcional com 27 UFs, cache fix, e links de edital
+- **Dados**: dados/licitacoes.csv (2054 registros)
+- **Framework**: Streamlit + Pandas + Plotly
+
+## ✅ Já Implementado
+- Dashboard completo com 5 abas
+- Filtros funcionais (UF, órgão, valores)
+- Links para editais PNCP
+- 46 testes unitários PASSANDO
+- Painel de debug com reload manual
+- Interface responsiva
+
+## 🎯 Nova Feature: Alertas Telegram
+Implementar sistema de **notificações em tempo real** via Telegram quando novas licitações aparecem.
+
+### Requisitos:
+1. **utils_telegram.py** - Funções para enviar mensagens
+2. **monitor_alertas.py** - Script que monitora CSV e envia alertas (rodar a cada 5 min)
+3. **Config de Alertas** - JSON/SQLite para armazenar preferências do usuário
+4. **Interface Dashboard** - Sidebar para configurar alertas
+5. **Testes** - test_alertas.py com 20+ testes
+
+### O que deve fazer:
+1. Criar `utils_telegram.py` com classe `TelegramAlerter`
+   - Enviar mensagens
+   - Formatar licitações como HTML
+   - Error handling
+
+2. Criar `monitor_alertas.py`
+   - Detectar novas licitações (hash/timestamp)
+   - Filtrar por UF, valor, órgão, palavras-chave
+   - Enviar para Telegram
+   - Logging completo
+
+3. Criar `config/alertas_config.json`
+   - Estrutura com token, chat_id, filtros
+   - Suportar múltiplos alertas
+
+4. Adicionar interface no `dashboard.py`
+   - Sidebar: "🔔 ALERTAS"
+   - Campos: UF, valor min/max, órgão, palavras-chave, chat_id
+   - Botão: "💾 Salvar" + "🔔 Testar Alerta"
+
+5. Criar `tests/test_alertas.py`
+   - 20+ testes de formatação, filtros, envio
+   - Mocks do Telegram
+   - Casos edge
+
+6. Criar `ALERTAS_TELEGRAM.md`
+   - Como configurar bot Telegram
+   - Como usar
+   - Troubleshooting
+
+### Tecnologia:
+- **API**: python-telegram-bot ou requests (recomendação: requests por simplicidade)
+- **Database**: SQLite (config/alertas.db)
+- **Monitoramento**: Polling simples (5 min)
+- **Logs**: Python logging → logs/alertas.log
+
+### Estrutura esperada:
+```
+config/
+├─ alertas_config.json (template com exemplo)
+├─ alertas.db (SQLite - será criado automaticamente)
+└─ hash_anterior.txt (último hash do CSV)
+
+monitor_alertas.py (500-700 linhas)
+utils_telegram.py (200-300 linhas)
+tests/test_alertas.py (200+ linhas)
+dashboard.py (adicionar sidebar de alertas)
+ALERTAS_TELEGRAM.md (documentação)
+```
+
+### Detalhes Técnicos:
+- UFs: 27 estados ABNT (AC, AL, AM, AP, BA, CE, DF, ES, GO, MA, MG, MS, MT, PA, PB, PE, PI, PR, RJ, RN, RO, RR, RS, SC, SE, SP, TO)
+- Colunas CSV: orgao, objeto, valor_estimado, data_publicacao, uf, municipio, numero_edital, modalidade, status
+- Formato msg: HTML com negrito, link para PNCP
+- Performance: <2s para enviar alerta
+- Cache: TTL=5min (já implementado para dados)
+
+### Após Implementar:
+✅ Testar interface no dashboard (localhost:8501)
+✅ Testar envio de mensagem Telegram
+✅ Executar todos os testes
+✅ Validar logs
+✅ Criar documentation
+✅ Pronto para produção
+
+**Arquivo de referência completo**: PROMPT_ESPECIALISTA_ALERTAS_TELEGRAM.md no projeto
+
+---
+
+## 📁 Como Começar:
+
+1. Clonar/copiar o projeto de c:\licitacoes_pncp
+2. Ler PROMPT_ESPECIALISTA_ALERTAS_TELEGRAM.md para detalhes completos
+3. Instalar: `pip install python-telegram-bot` (ou usar `requests`)
+4. Começar pela FASE 1 (setup Telegram)
+5. Seguir sequência: Fase 1 → 2 → 3 → 4 → 5
+
+**Status**: 🟢 Pronto para começar
+**Versão**: 2.0 (com alertas como próxima feature)
+**Data**: 07/03/2026

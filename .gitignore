@@ -1,0 +1,46 @@
+# Ambiente virtual
+venv/
+.venv/
+env/
+
+# Variáveis de ambiente (contém secrets)
+.env
+
+# Dados locais
+dados/
+*.db
+*.sqlite
+*.sqlite3
+
+# Cache Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyc
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Arquivos de saída / temporários
+*.csv
+*.xlsx
+*.xls
+monitor_output.txt
+streamlit_out.txt
+streamlit_err.txt
+chat_id.txt
+
+# Docker
+docker-compose.override.yml
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Configs com secrets
+config/alertas_config.json
+radar_state*.json

@@ -1,0 +1,89 @@
+name: CI — Radar Licitações TI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Instalar dependências
+        run: |
+          pip install -r requirements.txt
+          pip install pytest pytest-cov
+
+      - name: Executar testes
+        run: |
+          pytest . -v --tb=short --cov=. --cov-report=xml --cov-report=term-missing
+
+      - name: Upload cobertura
+        if: matrix.python-version == '3.11'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.xml
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Instalar linters
+        run: pip install ruff
+
+      - name: Lint com ruff
+        run: ruff check . --select E,W,F --ignore E501
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Instalar bandit
+        run: pip install bandit
+
+      - name: Scan de segurança
+        run: bandit -r . -x ./venv,./tests,./.github -ll -ii
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: [test, lint]
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t radar-licitacoes-ti:${{ github.sha }} .
+
+      - name: Testar container
+        run: |
+          docker run -d --name test-radar -p 8501:8501 radar-licitacoes-ti:${{ github.sha }}
+          sleep 10
+          curl -f http://localhost:8501/_stcore/health || exit 1
+          docker stop test-radar
